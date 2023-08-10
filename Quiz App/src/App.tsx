@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
+import { GlobalStyle, Wrapper } from './App.styles';
 import { Difficulty, fetchData, Questions } from './api';
 import QuestionCard from './components/QuestionCard';
 
 export type AnswerObject = {
 	question: string;
-	userAns: string;
+	answer: string;
 	isCorrect: boolean;
 	correctAns: string;
 };
@@ -39,8 +40,6 @@ const App = () => {
 	};
 
 	const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (gameOver) return;
-
 		const answer = (e.target as HTMLButtonElement).value;
 
 		const isCorrect = answer === questions[quesNum].correct_answer;
@@ -49,7 +48,7 @@ const App = () => {
 
 		const answerData: AnswerObject = {
 			question: questions[quesNum].question,
-			userAns: answer,
+			answer,
 			isCorrect,
 			correctAns: questions[quesNum].correct_answer,
 		};
@@ -64,7 +63,8 @@ const App = () => {
 
 	return (
 		<>
-			<div>
+			<GlobalStyle />
+			<Wrapper>
 				<h1>React Quiz App</h1>
 				{!!(gameOver || userAnswers.length === TOTAL_QUES) && (
 					<button className="start" onClick={startTrivia}>
@@ -90,10 +90,10 @@ const App = () => {
 					quesNum !== TOTAL_QUES - 1
 				) && (
 					<button className="next" onClick={nextQuestion}>
-						Next
+						Next Question
 					</button>
 				)}
-			</div>
+			</Wrapper>
 		</>
 	);
 };
