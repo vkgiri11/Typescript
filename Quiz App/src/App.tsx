@@ -40,7 +40,7 @@ const App = () => {
 	};
 
 	const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-		const answer = (e.target as HTMLButtonElement).value;
+		const answer = (e.currentTarget as HTMLButtonElement).value;
 
 		const isCorrect = answer === questions[quesNum].correct_answer;
 
