@@ -1,5 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
+import ShoppingCartDrawer from '../components/ShoppingCartDrawer';
+
 type ShoppingCartProviderProps = {
 	children: ReactNode;
 };
@@ -9,6 +11,10 @@ type ShoppingCartContextProps = {
 	increaseCartQuantity: (id: number) => void;
 	decreaseCartQuantity: (id: number) => void;
 	removeFromCart: (id: number) => void;
+	openCart: () => void;
+	closeCart: () => void;
+	cartQuantity: number;
+	cartItems: CartItem[];
 };
 
 type CartItem = {
@@ -24,6 +30,13 @@ export const useShoppingCart = () => {
 
 export const ShoppingCartProvider: React.FC<ShoppingCartProviderProps> = ({ children }) => {
 	const [cartItems, setCartItems] = useState<CartItem[]>([]);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+	const cartQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+	const openCart = () => setIsDrawerOpen(true);
+
+	const closeCart = () => setIsDrawerOpen(false);
 
 	const getItemQuantity = (id: number) => {
 		return cartItems.find((item) => item.id === id)?.quantity || 0;
@@ -60,8 +73,18 @@ export const ShoppingCartProvider: React.FC<ShoppingCartProviderProps> = ({ chil
 
 	return (
 		<ShoppingCartContext.Provider
-			value={{ getItemQuantity, increaseCartQuantity, decreaseCartQuantity, removeFromCart }}>
+			value={{
+				getItemQuantity,
+				increaseCartQuantity,
+				decreaseCartQuantity,
+				removeFromCart,
+				openCart,
+				closeCart,
+				cartItems,
+				cartQuantity,
+			}}>
 			{children}
+			<ShoppingCartDrawer isOpen={isDrawerOpen} />
 		</ShoppingCartContext.Provider>
 	);
 };
